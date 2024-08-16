@@ -379,6 +379,10 @@ let righthotbar=false;
 let pause=false;
 let players=false;
 
+let rHorizontalValue = 0;
+let rVerticalValue = 0;
+
+
 window.addEventListener("gamepadconnected", (event) => {
 controllerIndex = event.gamepad.index;
 console.log("Controller Connected!");
@@ -390,58 +394,80 @@ controllerIndex = null;
 });
 
 function controllerInput() {
-if (controllerIndex !== null) {
-  const gamepad = navigator.getGamepads()[controllerIndex];
+    if (controllerIndex !== null) {
+        const gamepad = navigator.getGamepads()[controllerIndex];
+        const buttons = gamepad.buttons;
 
-  const buttons = gamepad.buttons;
+        const stickDeadZone = 0.4;
 
-  const stickDeadZone = 0.4;
-  const leftRightValue = gamepad.axes[0];
+        // Left joystick axes (used for player movement)
+        const leftRightValue = gamepad.axes[0];
+        const upDownValue = gamepad.axes[1];
 
-  if (leftRightValue >= stickDeadZone) {
-    jrightPressed = true;
-  } else if (leftRightValue <= stickDeadZone) {
-    jrightPressed = false;
-  } if (leftRightValue <= -stickDeadZone) {
-    jleftPressed = true;
-  } else if (leftRightValue >= -stickDeadZone) {
-    jleftPressed = false;
-  }
+        // Right joystick axes (used for camera rotation)
+        rHorizontalValue = gamepad.axes[2];  // Horizontal movement of right joystick
+        rVerticalValue = gamepad.axes[3];    // Vertical movement of right joystick
 
-  const upDownValue = gamepad.axes[1];
+        // Handle left joystick
+        if (leftRightValue >= stickDeadZone) {
+            jrightPressed = true;
+        } else if (leftRightValue <= stickDeadZone) {
+            jrightPressed = false;
+        }
+        if (leftRightValue <= -stickDeadZone) {
+            jleftPressed = true;
+        } else if (leftRightValue >= -stickDeadZone) {
+            jleftPressed = false;
+        }
 
-  if (upDownValue >= stickDeadZone) {
-    jdownPressed = true;
-  } else if (upDownValue <= stickDeadZone) {
-    jdownPressed = false;
-  } if (upDownValue <= -stickDeadZone) {
-    jupPressed = true;
-  } else if (upDownValue >= -stickDeadZone) {
-    jupPressed = false;
-  }
+        if (upDownValue >= stickDeadZone) {
+            jdownPressed = true;
+        } else if (upDownValue <= stickDeadZone) {
+            jdownPressed = false;
+        }
+        if (upDownValue <= -stickDeadZone) {
+            jupPressed = true;
+        } else if (upDownValue >= -stickDeadZone) {
+            jupPressed = false;
+        }
 
-  greenPressed = buttons[0].pressed;
-  redPressed = buttons[1].pressed;
-  bluePressed = buttons[2].pressed;
-  yellowPressed = buttons[3].pressed;
+        // Handle button presses
+        greenPressed = buttons[0].pressed;
+        redPressed = buttons[1].pressed;
+        bluePressed = buttons[2].pressed;
+        yellowPressed = buttons[3].pressed;
 
-  lbPressed = buttons[4].pressed
-  rbPressed = buttons[5].pressed
-  ltPressed = buttons[6].pressed
-  rtPressed = buttons[7].pressed
+        lbPressed = buttons[4].pressed;
+        rbPressed = buttons[5].pressed;
+        ltPressed = buttons[6].pressed;
+        rtPressed = buttons[7].pressed;
 
-  selectPressed = buttons[8].pressed
-  pausePressed = buttons[9].pressed
+        selectPressed = buttons[8].pressed;
+        pausePressed = buttons[9].pressed;
 
-  ljsPressed = buttons[10].pressed
-  rjsPressed = buttons[11].pressed
+        ljsPressed = buttons[10].pressed;
+        rjsPressed = buttons[11].pressed;
 
-  upPressed = buttons[12].pressed;
-  downPressed = buttons[13].pressed;
-  leftPressed = buttons[14].pressed;
-  rightPressed = buttons[15].pressed;
+        upPressed = buttons[12].pressed;
+        downPressed = buttons[13].pressed;
+        leftPressed = buttons[14].pressed;
+        rightPressed = buttons[15].pressed;
+    }
 }
+function rotateCamera() {
+    const sensitivity = 25;
+    if (rHorizontalValue !== 0 || rVerticalValue !== 0) {
+        let movementX = rHorizontalValue * sensitivity;
+        let movementY = rVerticalValue * sensitivity;
+
+        let canvas = document.querySelector('canvas');
+        canvas.dispatchEvent(new MouseEvent("mousemove", {
+            "movementX": movementX,
+            "movementY": movementY
+        }));
+    }
 }
+
 
 function movePlayer() {
 if (jupPressed) {console.log("W");keyEvent("w", "keydown");} 
@@ -491,6 +517,7 @@ else if (!rightPressed) {keyEvent("t", "keyup");chat=true;}
 }
 
 function gameLoop() {
+rotateCamera();
 controllerInput();
 movePlayer();
 requestAnimationFrame(gameLoop);
