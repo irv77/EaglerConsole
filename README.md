@@ -1,4 +1,4 @@
-# <img src=".github/assets/logo.png" alt="Eagler Console Logo" align="right" width="100px">Eagler Console v1.0
+# <img src=".github/assets/logo.png" alt="Eagler Console Logo" align="right" width="100px">Eagler Console v1.1
  A script to add controller support to eaglercraft!<br>
  Currently in very early testing/development. Using some of FlamedDogo's eaglermobile code!
 
@@ -6,6 +6,7 @@
 <hr>
 
  ## Versions
+ __v1.1__ - Now with camera support! (Made by radmanplays)<br>
  __v1.0__ - Rough outline for future!<br>
 
  <hr>
@@ -21,7 +22,7 @@
 <summary>Click here to expand feature list</summary>
 
 - [x] Basic WASD controls
-- [ ] Look around controls
+- [x] Look around controls
 - [x] Every other controls
 - [ ] Support for typing
 - [ ] UI navigation support
@@ -32,6 +33,11 @@
 - [ ] Remove unnecessary code
 
 </details>
+
+<hr>
+
+## Credits
+IRV77, radmanplays
 
 <hr>
 
